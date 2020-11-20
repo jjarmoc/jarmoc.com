@@ -14,8 +14,8 @@ You see, nearly eight years after being abused in a phishing campaign, the vulne
 
 It starts with a [News.com piece from November 2005](http://news.cnet.com/Phishers-use-IRS-tax-refund-as-bait/2100-7349_3-5977588.html)  The article discusses a [phishing](http://en.wikipedia.org/wiki/Phishing) campaign, which purports to be an email from the IRS, but instead takes the victim to a fraudulent site which asks for their Social Security Number, Credit Card Details, and IRS Filing information.
 
-{% blockquote Graham Cluley, Sophos %} With GovBenefits.gov there is a great opportunity for criminals by posing as the IRS to get a great deal of information, including your credit card details and Social Security number
-{% endblockquote %}
+ "With GovBenefits.gov there is a great opportunity for criminals by posing as the IRS to get a great deal of information, including your credit card details and Social Security number."
+										--	Graham Cluley, Sophos
 
 There's more details available in [Sophos' original report.](http://www.sophos.com/en-us/press-office/press-releases/2005/11/irsphish.aspx)
 
@@ -25,9 +25,7 @@ For our purpose, the interesting part is that the [News.com](http://news.cnet.co
 http://www.govbenefits.gov/govbenefits/externalLink.jhtml?url=http://www.news.com
 {% endcodeblock %}
 
-{% pullquote %}
-News.com apparently contacted the Department of Labor about the issue back in 2005, and cites an unnamed representative as stating {" "The government is aware of the issue and is working to fix it." "}
-{% endpullquote %}
+News.com apparently contacted the Department of Labor about the issue back in 2005, and cites an unnamed representative as stating The government is aware of the issue and is working to fix it."
 
 Surely the government once made aware of an active campaign abusing one of their sites, and promising to fix it, can manage that fix in eight years.  Right?  Well, let's see...
 
@@ -50,7 +48,7 @@ $ curl -v http://www.govbenefits.gov/govbenefits/externalLink.jhtml?url=http://w
 < 
 ```
 
-Some time has passed since all this was written, and it seems govbenefits.gov is no more.  All visits to the site now redirect with a 301 Moved Permanently response to benefits.gov.  So to the vulnerable URL cited by News.com redirects to the newer beneftis.gov branding.
+Some time has passed since all this was written, and it seems govbenefits.gov is no more.  All visits to the site now redirect with a 301 Moved Permanently response to benefits.gov.  So to, the vulnerable URL cited by News.com redirects to the newer benefits.gov branding.
 
 Interestingly, the Location header it gives is malformed.  Their redirect seems to strip the first / that trails the hostname, so it probably breaks a good number of legitimate links, bookmarks, etc.  as well.  This effectively means that the redirect will only work for bare requests to govbenefits.gov without any path or file name following.
 
