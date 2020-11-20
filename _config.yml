@@ -19,8 +19,8 @@ email: Jeff@Jarmoc.com
 description: ""
 baseurl: "/jekyll-test/" # the subpath of your site, e.g. /blog
 url: "https://jjarmoc.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: jekyllrb
-github_username:  jekyll
+twitter_username: jjarmoc
+github_username:  jjarmoc
 
 # Build settings
 markdown: kramdown
