@@ -30,7 +30,7 @@ News.com apparently contacted the Department of Labor about the issue back in 20
 
 Surely the government once made aware of an active campaign abusing one of their sites, and promising to fix it, can manage that fix in eight years.  Right?  Well, let's see...
 
-%{ highlight plain } Current State
+%{ highlight bash } Current State
 $ curl -v http://www.govbenefits.gov/govbenefits/externalLink.jhtml?url=http://www.news.com
 * About to connect() to www.govbenefits.gov port 80 (#0)
 *   Trying 23.72.82.40...
