@@ -21,9 +21,9 @@ There's more details available in [Sophos' original report.](http://www.sophos.c
 
 For our purpose, the interesting part is that the [News.com](http://news.cnet.com/Phishers-use-IRS-tax-refund-as-bait/2100-7349_3-5977588.html) article gives an example of the vulnerable [Open-Redirect](http://cwe.mitre.org/data/definitions/601.html)
 
-{% codeblock Example Redirect %}
+```
 http://www.govbenefits.gov/govbenefits/externalLink.jhtml?url=http://www.news.com
-{% endcodeblock %}
+``` -- Example Redirect URL
 
 News.com apparently contacted the Department of Labor about the issue back in 2005, and cites an unnamed representative as stating The government is aware of the issue and is working to fix it."
 
