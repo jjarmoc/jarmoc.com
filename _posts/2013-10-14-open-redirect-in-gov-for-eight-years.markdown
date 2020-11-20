@@ -58,15 +58,15 @@ If we correct it, by adding the missing slash, we see a much more interesting re
 html Corrected for bad site-wide 301
 ``` 
 $ curl http://www.benefits.gov/govbenefits/externalLink.jhtml?url=http://www.news.com
-<html>
-<head>
-	<script>
+html>
+head>
+	script>
 			window.location.href = "http://www.news.com";
-	</script>
-</head>
-<body>
-</body>
-</html>
+	/script>
+/head>
+body>
+/body>
+/html>
 ```
 
 So here we have a Javascript redirect to www.news.com.  Remember, this was publicly reported and associated with a Phishing campaign masquerading as the IRS almost eight years ago!
