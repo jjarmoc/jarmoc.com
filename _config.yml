@@ -23,7 +23,7 @@ twitter_username: jjarmoc
 github_username:  jjarmoc
 
 # Build settings
-markdown: kramdown
+markdown: GFM
 theme: minima
 plugins:
   - jekyll-feed
