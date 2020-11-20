@@ -1,0 +1,252 @@
+---
+layout: post
+title: "OTP, Stream Ciphers, and key reuse"
+date: 2013-08-12 17:08
+comments: true
+categories: [CTF, Ruby, Crypto]
+---
+
+During (and just prior to) DEF CON, [|)ruid](https://twitter.com/druidian) ran a series of challenges for entrance into his LOLBitcoin party.  I decided to give them a shot, and thought I'd document my approach to one of the challenges here.
+
+There were several different paths available, so that anyone could approach the challenges using whatever skills they felt were their strongest.  I decided to go down 'The Way of the Cryptologist' and was met with a few challenges put together by [Dan Crowley](https://twitter.com/dan_crowley).
+
+It's the second of these which I'm describing here.  Dan himself beat me to the punch with a solid [writeup](http://blog.spiderlabs.com/2013/08/the-way-of-the-cryptologist.html) of his own, and a [tool](https://github.com/SpiderLabs/cribdrag) which he released to attack the challenge, and similarly flawed uses of crypto.
+<!-- more -->
+# The Challenge
+The challenge was presented in the form of two ciphertexts, and a statement that they were encrypted in a manner that supports [Perfect Secrecy](https://www.khanacademy.org/math/applied-math/cryptography/crypt/v/perfect-secrecy).  That is, no amount of computational power should provide an aide in recovering the plaintext.  However, as we'll see, the devil's in the details and implementation flaws can still cause havoc.
+
+```
+These two ciphertexts are encrypted with a cipher mathematically proven to have perfect secrecy. Read them.
+
+ecc8852cf33bd51a64b04b50a4469070e13851a3cb9bdc49dc0908af37756e08e03d2dfb0d368787785aa53223c55d8bb84f02a566db7d84582890343f02ae90e34f8048075a9ea00acfb48706d817bb126e830825c23f19c4c32c5caa39b0c5ca67652e43
+
+ecc8857ebb34c60730e75948aa53d427fc3c58a3d99f885593460de02d696a4bf76f38ea0e35ce97705eae38388b7c82b10e12a63d98739b1d7c8d712c03b4d5ec569748154789f40ccfbed34fc619b51366c2132a8d255f81a0205aac27bdd4d72e2e2e67
+```
+
+# Getting started
+At first, I saw the leading characters 'ecc885' and thought this was a hint at [Eliptic Curve Cryptography](http://en.wikipedia.org/wiki/Elliptic_curve_cryptography) something I'll admit I'm not too familiar with.
+
+It was only after doing some research on ECC that I realized, the cipher itself probably doesn't matter, but that these leading bytes being identical were significant.  This is because they're an indicator that the same key, from either a [stream cipher](http://en.wikipedia.org/wiki/Stream_cipher) of some sort or a [One-Time Pad](http://en.wikipedia.org/wiki/One-time_pad), was used to encrypt both.
+
+# Stream Cipher and OTP Mode of Operation
+[Stream Ciphers](http://en.wikipedia.org/wiki/Stream_cipher) operate by producing a continuous stream of bytes (the 'keystream') which is then mixed with the plaintext one byte at a time by an xor operation to produce the ciphertext.  Effectively, the keystream operates as a one-time pad, but with the differentiating factor that it can be reproduced by another endpoint which knows the parameters for the stream function and be used for decryption.  
+
+# The Attack
+For our purposes, whether this is a stream cipher or a OTP is irrelevant, what matters is that the same keystream was applied to two different plaintexts; a flaw that allows us to decode the plaintexts with a little effort.
+
+Consider the following operation;
+
+```
+ciphertext1 = xor(plaintext1, keystream)
+ciphertext2 = xor(plaintext2, keystream)
+```
+
+By xor'ing the two ciphertexts together, the keystream is essentially xor'd against itself, and removed from our text.  This leaves the contents of the two plaintexts mixed together via xor.
+
+```
+mixedplain = xor(ciphertext1, ciphertext2)
+	is equivilant to
+mixedplain = xor(plaintext1, plaintext2)
+```
+
+To do this in Ruby, we'll need the ability to xor the two ciphertext's together.  We also need to be able to read in and decode ascii-hex representations of the ciphertext that were provided.  Ruby doesn't provide xor operations on strings by default, but I already had some code from the [Matasano Crypto Challenges](http://www.matasano.com/articles/crypto-challenges/) which does this for me.  Full Disclosure: I work for Matasano, but am not involved in the challenges, aside from enjoying them and learning from them.  If you're reading this post, you'd probably like them too!
+
+Here's my patches to Ruby's String class:
+
+``` ruby Ruby String Patches
+class String
+	def from_hex()
+		self.chop()
+		string = self.scan(/[a-fA-F0-9]{2}/).map{|x| x.hex.chr}.join
+		return string
+	end
+
+	def to_hex()
+		return self.split("").map{|x| x.unpack('H*')}.join
+	end
+
+	def ^ (key) # Define an xor operator
+		accum = []
+		hex_bytes = []
+		key_bytes = []
+
+		key = key.chr if key.is_a? Fixnum and key < 255 #Lets us handle Fixnum or String keys
+		raise RangeError, "Integer Keys can be only 1 byte" if key.is_a? Fixnum #raise an error if it's too long
+		raise "Invalid XOR key type #{key.class}" unless key.is_a? String #Else raise an exception
+
+		self.to_hex.split("").each_slice(2) {|x| hex_bytes << x.join}
+		key.to_hex.split("").each_slice(2) {|x| key_bytes << x.join}
+		hex_bytes.each_with_index{|h,i| accum << (h.to_i(16) ^ key_bytes[i.modulo key_bytes.size].to_i(16)).chr}
+		return accum.join
+	end
+end
+```
+This code patches Ruby's String class, adding a .from_hex method to decode hex strings, .to_hex for the reverse, and an xor operator using the ^ symbol, similar to Ruby's built in numeric xor functions.  This makes it pretty transparent to use.  It also allows us to xor a Ruby string against another arbitrary-length string, or a single byte Fixnum (Yah, I should make this take arbitrary numeric lengths..)  There's even some exceptions raised if the parameters aren't supported, etc.
+
+In IRB, we can now do something like the following;
+``` ruby 
+1.9.3p125 :002 > ciphertext1 = "ecc8852cf33bd51a64b04b50a4469070e13851a3cb9bdc49dc0908af37756e08e03d2dfb0d368787785aa53223c55d8bb84f02a566db7d84582890343f02ae90e34f8048075a9ea00acfb48706d817bb126e830825c23f19c4c32c5caa39b0c5ca67652e43".from_hex
+ => "\xEC\xC8\x85,\xF3;\xD5\x1Ad\xB0KP\xA4F\x90p\xE18Q\xA3\xCB\x9B\xDCI\xDC\t\b\xAF7un\b\xE0=-\xFB\r6\x87\x87xZ\xA52#\xC5]\x8B\xB8O\x02\xA5f\xDB}\x84X(\x904?\x02\xAE\x90\xE3O\x80H\aZ\x9E\xA0\n\xCF\xB4\x87\x06\xD8\x17\xBB\x12n\x83\b%\xC2?\x19\xC4\xC3,\\\xAA9\xB0\xC5\xCAge.C" 
+1.9.3p125 :003 > ciphertext2 = "ecc8857ebb34c60730e75948aa53d427fc3c58a3d99f885593460de02d696a4bf76f38ea0e35ce97705eae38388b7c82b10e12a63d98739b1d7c8d712c03b4d5ec569748154789f40ccfbed34fc619b51366c2132a8d255f81a0205aac27bdd4d72e2e2e67".from_hex
+ => "\xEC\xC8\x85~\xBB4\xC6\a0\xE7YH\xAAS\xD4'\xFC<X\xA3\xD9\x9F\x88U\x93F\r\xE0-ijK\xF7o8\xEA\x0E5\xCE\x97p^\xAE88\x8B|\x82\xB1\x0E\x12\xA6=\x98s\x9B\x1D|\x8Dq,\x03\xB4\xD5\xECV\x97H\x15G\x89\xF4\f\xCF\xBE\xD3O\xC6\x19\xB5\x13f\xC2\x13*\x8D%_\x81\xA0 Z\xAC'\xBD\xD4\xD7...g" 
+1.9.3p125 :004 > mixedplain = ciphertext1 ^ ciphertext2
+ => "\x00\x00\x00RH\x0F\x13\x1DTW\x12\x18\x0E\x15DW\x1D\x04\t\x00\x12\x04T\x1COO\x05O\x1A\x1C\x04C\x17R\x15\x11\x03\x03I\x10\b\x04\v\n\eN!\t\tA\x10\x03[C\x0E\x1FET\x1DE\x13\x01\x1AE\x0F\x19\x17\x00\x12\x1D\x17T\x06\x00\nTI\x1E\x0E\x0E\x01\bA\e\x0FO\x1AFEc\f\x06\x06\x1E\r\x11\x1DIK\x00$" 
+```
+Notice that while we still haven't recovered the plaintext, we have removed the influence of the keystream, which makes our job much easier.
+
+# Crib Dragging
+From here, our task becomes seperating the two plaintexts from one another.  To do this, we have to do a little guessing about the plaintexts themselves.  This sort of guessing is called a known plaintext attack, or ['cribbing'](http://en.wikipedia.org/wiki/Known-plaintext_attack).  The idea is that we can assume the plaintext is (in this case) likely an english language text, and thus guess that it'll include some common words, articles, etc.  From what we know of the challenge we can guess that it may contain the words 'bitcoin', 'crypto', or 'party' in addition to more general articles such as 'the', 'of', and 'and.'  Believe it or not, these assumptions give us enough to recover both plaintexts!
+
+Even if our guesses are correct, we don't know where in the plaintext they occur.  So let's write a function which takes our crib, and xor's it at every position in the mixed plaintext string.  If it's valid in either plaintext, we should see the contents of the other plaintext and know that we've guessed correctly at that position.
+
+``` 
+def cribdrag(ciphertext, crib)
+	ciphertext.length.times{ |x| puts "#{x} : #{ciphertext[x,crib.length] ^ crib}"}
+end
+```
+
+This function takes two parameters, our ciphertext (mixed plaintext in this case) and the crib.  It loops through the ciphertext, and xor's the crib at each index.  While it's doing this, it prints out both the index and the xor'd value.  We can just eyeball and get an idea where we have a valid crib.
+
+For example, let's try 'bitcoin' as our crib.
+``` ruby
+1.9.3p125 :005 > cribdrag(mixedplain, "bitcoin")
+0 : bit1'f}
+1 : bi&+`zs
+2 : b;<l|t:
+3 : 0!{pr=9
+4 : *fg~;>|
+5 : mzi78{v
+6 : qt 4}q`
+7 : =#qwg{
+8 : 6>f{a|*
+9 : 5{lmz-9
+10 : pqzv+>s
+11 : zga'8tj
+12 : l|04rmg
+13 : w-#~k`n
+14 : &>igfi|
+15 : 5tpjo{j
+16 : m}c}m:
+17 : f`tqk=r
+18 : kifg;u!
+19 : b{p7s&!
+20 : pm  &k
+21 : f=h, l!
+22 : 6u;,j&t
+23 : ~&;f sr
+24 : -&q,uuj
+25 : -l;ysm-
+26 : g&nk*y
+27 : -shg,~<
+28 : xup x;{
+29 : ~m7t=|
+30 : f*c1zxm
+31 : !~&v~jm
+32 : u;arlj'
+33 : 0|e`l ~
+34 : wxw`&yf
+35 : sjw*aj
+36 : aj=sgme
+37 : a dkkbd
+38 : +y|gdcu
+39 : rapher 
+40 : jmit'O
+41 : fb~x!Hg
+42 : ico-N`g
+43 : hr:Bf`/
+44 : y'Ujf(~
+45 : ,H}j.ym
+46 : C`}"j5
+47 : k`5sl2-
+48 : k(d`4*`
+49 : #yw8,gq
+50 : rj/ av+
+51 : a27mp,:
+52 : 9*z|*=s
+53 : !gk&;t+
+54 : lv17r,}
+55 : }, ~*zo
+56 : '=i&|ht
+57 : 6t1pns+
+58 : ,gbu,a
+59 : 'zuy*fw
+60 : qhn&`py
+61 : cs1lv~n
+62 : x,{zxi|
+63 : 'fmto{s
+64 : mpcc}ty
+65 : {~tqr~:
+66 : uif~x=h
+67 : b{it;on
+68 : ptc7iid
+69 : ~ eoc:
+70 : u=rce='
+71 : 6oti; p
+72 : di~7&w`
+73 : bc *qg`
+74 : h==}ago
+75 : 6 jmahf
+76 : +wzmna/
+77 : |gzbg(u
+78 : lguk.ra
+79 : lh|"tf!
+80 : ca5x`&t
+81 : j(ol s(
+82 : #r{,u/+
+83 : yf;y),
+84 : m&n%*
+b
+85 : -s2&
+         eh
+86 : x/1coh
+87 : $,oiop
+88 : '
+xeiwc
+89 : ereqd
+90 : nor}bxs
+91 : dojn~t'
+92 : dwyrr %
+93 : |de~&"n
+94 : oxi*$iJ
+95 : st=(oM
+96 :  ?cK
+97 : +"tG
+98 : )iP
+99 : bM
+100 : F
+ => 101 
+```
+
+It's mostly gibberish, but at index 39, we see the string 'rapher' appears.  This seems like it could be valid plaintext.  Maybe this is a substring of 'cryptographer?'
+
+Let's try that as a crib, and see what we get.  Since we prepended a few characters we can look a little prior to out last index, where we should expect a match.
+``` ruby
+1.9.3p125 :027 >   cribdrag(mixedplain, "cryptographer")
+...
+30 : g1n"a~dq(``ay
+31 :  e+eeld;qxlnx
+32 : t lawl.bitcoi
+33 : 1ghsw&wze{b~<
+34 : vczs=ovjzs+S
+35 : rqz9dgcykk&D{
+...
+```
+
+and we have 't lawl.bitcoi' at index 32.  By flipping back and forth between our two plaintexts, and making guesses of what might surround the character's we've recovered, we can gradually expand this string to recover the entirety of both plaintexts.  It's helpful to try cribs as large as possible, and to remember that whitespace counts.  " the " gets two more characters than "the" for example, with essentially the same guess.
+
+Eventually, by iterating through this process and expanding/adding to our cribs, we end up with the following recovered plaintexts;
+```
+You have walked the path of the cryptographer and you are ready for further information. Congrats....
+Your next step will be to contact lawl.bitcoin@gmail.com to receive the next phase of the challenge. 
+```
+
+Notice that the first three bytes of both plaintexts are the same.  This is why we saw the duplicate 'ecc885' at the start of the ciphertexts.  These characters at the same position mixed with the keystream, give the same ciphertext.
+
+# Improvements
+There's plenty of room for improvement in this code.  Notably, it doesn't make any efforts to record successful cribs.  In my case, I started with one fairly large crib, and gradually expanded it's boundaries until I recovered the plaintext.  It may be simpler to record the position of successful guesses as a partial keystream, and then work on filling in the gaps.  Dan's tool does this, and it makes small cribs and articles far more useful.
+
+Another improvement, and something I actually did a bit of, would be to score recovered plaintexts against an english-language character frequency.  This would give us some automated insight into what may be a successful crib, rather than relying on scanning the output for obvious matches.  It's not a perfect solution though, especially for shorter texts, but could be a useful aide.
+
+Anyhow, I hope this post was helpful, and explains my approach to attacking reused keys.  Thanks for reading!
+
+
