@@ -23,7 +23,8 @@ For our purpose, the interesting part is that the [News.com](http://news.cnet.co
 
 ```
 http://www.govbenefits.gov/govbenefits/externalLink.jhtml?url=http://www.news.com
-``` -- Example Redirect URL
+``` 
+-- Example Redirect URL
 
 News.com apparently contacted the Department of Labor about the issue back in 2005, and cites an unnamed representative as stating The government is aware of the issue and is working to fix it."
 
@@ -54,7 +55,8 @@ Interestingly, the Location header it gives is malformed.  Their redirect seems 
 
 If we correct it, by adding the missing slash, we see a much more interesting result.  
 
-``` html Corrected for bad site-wide 301
+html Corrected for bad site-wide 301
+``` 
 $ curl http://www.benefits.gov/govbenefits/externalLink.jhtml?url=http://www.news.com
 <html>
 <head>
