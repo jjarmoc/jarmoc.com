@@ -21,16 +21,16 @@ There's more details available in [Sophos' original report.](http://www.sophos.c
 
 For our purpose, the interesting part is that the [News.com](http://news.cnet.com/Phishers-use-IRS-tax-refund-as-bait/2100-7349_3-5977588.html) article gives an example of the vulnerable [Open-Redirect](http://cwe.mitre.org/data/definitions/601.html)
 
-```
+{% highlight %}
 http://www.govbenefits.gov/govbenefits/externalLink.jhtml?url=http://www.news.com
-``` 
+{% endhighlight %}
 -- Example Redirect URL
 
 News.com apparently contacted the Department of Labor about the issue back in 2005, and cites an unnamed representative as stating The government is aware of the issue and is working to fix it."
 
 Surely the government once made aware of an active campaign abusing one of their sites, and promising to fix it, can manage that fix in eight years.  Right?  Well, let's see...
 
-``` plain Current State
+%{ highlight plain } Current State
 $ curl -v http://www.govbenefits.gov/govbenefits/externalLink.jhtml?url=http://www.news.com
 * About to connect() to www.govbenefits.gov port 80 (#0)
 *   Trying 23.72.82.40...
@@ -47,7 +47,7 @@ $ curl -v http://www.govbenefits.gov/govbenefits/externalLink.jhtml?url=http://w
 < Location: http://www.benefits.govgovbenefits/externalLink.jhtml?url=http://www.news.com
 < Date: Mon, 14 Oct 2013 13:35:45 GMT
 < 
-```
+{% endhighlight }
 
 Some time has passed since all this was written, and it seems govbenefits.gov is no more.  All visits to the site now redirect with a 301 Moved Permanently response to benefits.gov.  So to, the vulnerable URL cited by News.com redirects to the newer benefits.gov branding.
 
@@ -56,18 +56,19 @@ Interestingly, the Location header it gives is malformed.  Their redirect seems 
 If we correct it, by adding the missing slash, we see a much more interesting result.  
 
 html Corrected for bad site-wide 301
-``` 
+
+{% highlight bash }
 $ curl http://www.benefits.gov/govbenefits/externalLink.jhtml?url=http://www.news.com
-html>
-head>
-	script>
+<html>
+<head>
+	<script>
 			window.location.href = "http://www.news.com";
-	/script>
-/head>
-body>
-/body>
-/html>
-```
+	</script>
+</head>
+<body>
+</body>
+</html>
+{% endhighlight }
 
 So here we have a Javascript redirect to www.news.com.  Remember, this was publicly reported and associated with a Phishing campaign masquerading as the IRS almost eight years ago!
 
