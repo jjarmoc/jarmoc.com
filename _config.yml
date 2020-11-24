@@ -17,7 +17,7 @@ title: Jarmoc.com
 subtitle: /dev/random
 email: Jeff@Jarmoc.com
 description: ""
-baseurl: "/jekyll-test" # the subpath of your site, e.g. /blog
+baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://jjarmoc.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
 
 twitter_username: jjarmoc
