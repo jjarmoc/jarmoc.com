@@ -10,7 +10,7 @@ author: DrBearsec
 This is a guest post, mostly, from [@drbearsec](http://www.twitter.com/drbearsec).  I say mostly, because I'm formatting his words somewhat.  I did not take part in this challenge, so the solve is totally the work of he and his crack CTF team (currently in 2nd place overall, and gaining).  The team is compromised of @drbearsec, [@essobi](http://www.twitter.com/essobi), [@Babs0matic](http://www.twitter.com/babs0matic), and [@j0hnnyxm4s](http://www.twitter.com/j0hnnyxm4s).
 
 For this challenge, teams were given a series of password hashes.  Cracking them would yield the key.
-<!-- more -->
+<!--more-->
 ```
 5C53884888CBC6263A4B8CECC81EBCFB
 DECC8CF50CDD236FED6590F8AE87B93C

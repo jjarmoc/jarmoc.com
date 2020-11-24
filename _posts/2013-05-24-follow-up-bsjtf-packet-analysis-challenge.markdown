@@ -12,7 +12,7 @@ He had some *very* interesting things to say, which I thought warranted another 
 
 If you haven't read the [previous post](http://jarmoc.com/blog/2013/05/22/bsjtf-ctf-writeup-what-in-the-name-of-zeus/) about this challenge, you might want to read that first.
 
-<!-- more -->
+<!--more-->
 
 ###Updates from behind the scenes...
 

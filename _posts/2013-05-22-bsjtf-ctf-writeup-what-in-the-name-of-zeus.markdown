@@ -14,7 +14,7 @@ I'll try to outline not only my path to solving this, but also some failed ideas
 
 Thanks to the BSJTF and especially to [@dth0m](http://www.twitter.com/dth0m) for putting this challenge together.
 
-<!-- more -->
+<!--more-->
 
 # The Challenge
 For this challenge, we're given a [file](/static/whatinzeus/whatinzeus) and told it contains an IP address that is our flag.  I didn't save the full text, but that's the basic challenge.

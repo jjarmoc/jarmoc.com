@@ -11,7 +11,7 @@ I've resisted posting about [Heartbleed](http://www.heartbleed.com), just becaus
 Thanks, at least in part, to [Cloudflare's challenge](http://blog.cloudflare.com/the-results-of-the-cloudflare-challenge) it's been proven by a [number](https://blog.indutny.com/9.heartbleed) [of](https://news.ycombinator.com/item?id=7577659) [people](http://blog.erratasec.com/2014/04/cloudflare-challenge-writeup.html) that [RSA private keys]("http://en.wikipedia.org/wiki/RSA_(cryptosystem)") can be recovered with enough attempts, and a little math.
 
 So what makes my [successful attack](https://gist.github.com/jjarmoc/10890697) different?  I did it with [a Metasploit module](https://github.com/rapid7/metasploit-framework/pull/3268).
-<!-- more -->
+<!--more-->
 
 Here's what it looked like on an earlier version of the module;
 <img src="{{site.url}}/jekyll-test/images/heartbleed/success.png" style="display: block; margin: auto;" /> 

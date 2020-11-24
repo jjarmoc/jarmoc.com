@@ -1,0 +1,16 @@
+{% if site.twitter_username %}
+<section>
+  <h4>Twitter</h4>
+  <div id="twitter-feed"></div>
+  <script> 
+  $('<a/>',{
+      text: 'Tweets by {{site.twitter_username}}',
+      class: 'twitter-timeline',
+      "data-height": '500',
+      "data-theme": localStorage.getItem("themeBase"),
+      href: "https://twitter.com/{{site.twitter_username}}",
+  }).appendTo('#twitter-feed');  
+  </script>
+  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</section>
+{% endif %}

@@ -11,7 +11,7 @@ During (and just prior to) DEF CON, [|)ruid](https://twitter.com/druidian) ran a
 There were several different paths available, so that anyone could approach the challenges using whatever skills they felt were their strongest.  I decided to go down 'The Way of the Cryptologist' and was met with a few challenges put together by [Dan Crowley](https://twitter.com/dan_crowley).
 
 It's the second of these which I'm describing here.  Dan himself beat me to the punch with a solid [writeup](http://blog.spiderlabs.com/2013/08/the-way-of-the-cryptologist.html) of his own, and a [tool](https://github.com/SpiderLabs/cribdrag) which he released to attack the challenge, and similarly flawed uses of crypto.
-<!-- more -->
+<!--more-->
 # The Challenge
 The challenge was presented in the form of two ciphertexts, and a statement that they were encrypted in a manner that supports [Perfect Secrecy](https://www.khanacademy.org/math/applied-math/cryptography/crypt/v/perfect-secrecy).  That is, no amount of computational power should provide an aide in recovering the plaintext.  However, as we'll see, the devil's in the details and implementation flaws can still cause havoc.
 

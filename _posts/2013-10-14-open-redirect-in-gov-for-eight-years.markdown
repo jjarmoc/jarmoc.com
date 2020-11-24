@@ -10,7 +10,7 @@ While digging into some old phishing campaigns, I came across something interest
 
 You see, nearly eight years after being abused in a phishing campaign, the vulnerability is still present.
 
-<!-- more -->
+<!--more-->
 
 It starts with a [News.com piece from November 2005](http://news.cnet.com/Phishers-use-IRS-tax-refund-as-bait/2100-7349_3-5977588.html)  The article discusses a [phishing](http://en.wikipedia.org/wiki/Phishing) campaign, which purports to be an email from the IRS, but instead takes the victim to a fraudulent site which asks for their Social Security Number, Credit Card Details, and IRS Filing information.
 

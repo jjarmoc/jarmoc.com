@@ -1,0 +1,15 @@
+{% if site.avatar == true %}
+<div class="avatar">
+  <center>
+    {% if site.avatar_image != null %}
+      <img src="{{ site.avatar_image | prepend: '/' | prepend: site.baseurl }}" alt="me" class="avatar-image">
+    {% endif %}
+    {% if site.avatar_description != null %}
+      <p class="avatar-description">{{site.avatar_description}}</p>
+    {% endif %}
+    <div class="right-links">
+      {% include links.html %}
+    </div>
+  </center>
+</div>
+{% endif %}

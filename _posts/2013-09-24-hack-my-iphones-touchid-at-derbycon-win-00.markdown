@@ -11,7 +11,7 @@ Just like the title says, if you're the first to hack my iPhone 5s' TouchID duri
 The recently claimed [IsTouchIDHackedYet](http://istouchidhackedyet.com/) bounty has be claimed by Starbug of the [Chaos Computer Club](http://ccc.de/) and the corresponding [video](http://vimeo.com/75324765) shows the technique.  They used a scanner to create an image of a fingerprint from the iPhone's touchscreen, made a dummy fingerprint out of wood glue, and used that dummy print to authenticate to touchID.  [Marc Rogers](https://twitter.com/marcwrogers) and others have [reproduced](https://blog.lookout.com/blog/2013/09/23/why-i-hacked-apples-touchid-and-still-think-it-is-awesome/) the technique.  So everything is laid bare, right?
 
 Not quite.
-<!-- more -->
+<!--more-->
 
 I'm still not entirely sure just how big a threat this is in reality.  Given an intentionally laid clean print, it can be reproduced and used as a template, that much is clear.  I'm suprised that a scanned image (and reportedly a [photo from another iPhone](https://twitter.com/nickdepetrillo/status/382628038787088384)) are of sufficient resolution, but that seems to be the case.
 

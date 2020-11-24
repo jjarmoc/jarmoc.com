@@ -1,0 +1,36 @@
+---
+layout: page
+---
+
+<h1>{{page.subtitle}}</h1>
+
+{% assign sortedOuts = site.stdouts | date_sort | reverse %}
+{% for out in sortedOuts %}
+    <h3 class="out-title"> {{ out.title }}</h3>
+    <h5 class="out-title"> {{ out.date }} </h5>
+    <div class="row align-items-start">
+      <div class="col-sm-8">
+        {% if out.video != null %}
+		<a href="{{out.video}}" target="_blank">
+		  <i class="fa fa-video fa-2x"></i>
+		</a>
+		{% endif %}
+
+		{% if out.slides != null %}
+		<a href="{{out.slides}}" target="_blank">
+		  <i class="fa fa-file-powerpoint fa-2x"></i>
+		</a>
+		{% endif %}
+
+		{% if out.whitepaper != null %}
+		<a href="{{out.whitepaper}}" target="_blank">
+		  <i class="fa fa-file-alt fa-2x"></i>
+		</a>
+		{% endif %}
+      </div>
+    </div>
+    <div style="margin-bottom: 2em;"></div>
+    {{out.content}}
+    <div style="margin-bottom: 5em;"></div>
+{% endfor %}
+

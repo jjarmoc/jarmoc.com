@@ -1,0 +1,12 @@
+<div class="posts-list">
+  <a href="{{ '/' | prepend: site.baseurl }}">
+    <h4>Recent Posts:</h4>
+  </a>
+  <ul>
+    {% for post in site.posts limit: site.recent_posts %}
+    <li>
+      <a href="{{ post.url | prepend: site.baseurl  }}">{{ post.title }}</a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
