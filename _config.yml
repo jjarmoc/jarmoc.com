@@ -19,7 +19,9 @@ email: Jeff@Jarmoc.com
 description: ""
 baseurl: "/jekyll-test" # the subpath of your site, e.g. /blog
 url: "https://jjarmoc.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
+
 twitter_username: jjarmoc
+linkedin_id: jeffjarmoc
 github_username:  jjarmoc
 github_repo_count: 3
 github_show_profile_link: true
@@ -27,12 +29,6 @@ github_skip_forks: true
 
 # Build settings
 markdown: kramdown
-#theme: minima
-#theme: jekyll-theme-midnight
-#theme: jekyll-theme-hacker
-#remote_theme: pages-themes/hacker
-#theme: jekyll-theme-primer
-#remote_theme: tocttou/hacker-blog
 remote_theme: luxedo/jekyll-theme-potato-hacker
 
 plugins:
