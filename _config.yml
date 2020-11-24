@@ -47,7 +47,7 @@ plugins:
 #   - vendor/ruby/
 
 # My Additions Follow
-permalink: /jekyll-test/:year/:month/:day/:title/
+permalink: /:year/:month/:day/:title/
 
 paginate_path: "/page:num/" # paginate_path: "posts/:num"  # Directory base for pagination URLs eg. /posts/2/
 paginate: 5          # Posts per page on the blog index

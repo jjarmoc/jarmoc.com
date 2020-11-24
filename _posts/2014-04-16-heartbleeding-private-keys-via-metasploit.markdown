@@ -14,7 +14,7 @@ So what makes my [successful attack](https://gist.github.com/jjarmoc/10890697) d
 <!--more-->
 
 Here's what it looked like on an earlier version of the module;
-<img src="{{site.url}}/jekyll-test/images/heartbleed/success.png" style="display: block; margin: auto;" /> 
+<img src="{{site.url}}/images/heartbleed/success.png" style="display: block; margin: auto;" /> 
 
 Being able to use Metasploit to dump keys just means one less tool to use, and the benefits of Metasploit's database workflow, storage of keys as loot, etc.
 

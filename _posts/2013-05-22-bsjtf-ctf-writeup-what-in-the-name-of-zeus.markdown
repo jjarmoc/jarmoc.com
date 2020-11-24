@@ -29,7 +29,7 @@ So we know we have a packet capture.  The next step is to take a look at it and 
 
 ## Wireshark Analysis
 Opening the file in Wireshark, we see something like this:
-<img src="{{site.url}}/jekyll-test/images/whatinzeus/Wireshark.png" style="display: block; margin: auto;" /> 
+<img src="{{site.url}}/images/whatinzeus/Wireshark.png" style="display: block; margin: auto;" /> 
 The file contains 7125 packets, and at a glance they look fairly similar.  All of them we look at are UDP packets which seem to originate from the same source IP on port 1337.  They're destined for various addresses, but consistently using destination port 666.  The length of the packets also seems consistent at 66 bytes.
 
 Near the bottom of the screen, we see the payload of the first packet, which again matches the others.  The UDP payload contains only the string "...bacon...I mean beacon"  
