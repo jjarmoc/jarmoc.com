@@ -18,7 +18,7 @@ subtitle: /dev/random
 email: Jeff@Jarmoc.com
 description: ""
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://jjarmoc.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://jarmoc.com/" # the base hostname & protocol for your site, e.g. http://example.com
 
 twitter_username: jjarmoc
 linkedin_id: jeffjarmoc
