@@ -6,7 +6,7 @@ comments: true
 categories: [CTF, Ruby, Crypto]
 ---
 
-During (and just prior to) DEF CON, [|)ruid](https://twitter.com/druidian) ran a series of challenges for entrance into his LOLBitcoin party.  I decided to give them a shot, and thought I'd document my approach to one of the challenges here.
+During (and just prior to) DEF CON, [Druid](https://twitter.com/druidian) ran a series of challenges for entrance into his LOLBitcoin party.  I decided to give them a shot, and thought I'd document my approach to one of the challenges here.
 
 There were several different paths available, so that anyone could approach the challenges using whatever skills they felt were their strongest.  I decided to go down 'The Way of the Cryptologist' and was met with a few challenges put together by [Dan Crowley](https://twitter.com/dan_crowley).
 
