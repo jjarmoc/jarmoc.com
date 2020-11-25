@@ -53,7 +53,7 @@ To do this in Ruby, we'll need the ability to xor the two ciphertext's together.
 
 Here's my patches to Ruby's String class:
 
-``` ruby Ruby String Patches
+``` ruby
 class String
 	def from_hex()
 		self.chop()
